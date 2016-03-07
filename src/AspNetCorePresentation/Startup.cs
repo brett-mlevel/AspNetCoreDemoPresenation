@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
+using Microsoft.AspNet.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace AspNetCorePresentation
@@ -22,10 +23,9 @@ namespace AspNetCorePresentation
         {
             app.UseIISPlatformHandler();
 
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync("Hello World!");
-            });
+            // Add static files to the request pipeline.
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
         }
 
         // Entry point for the application.
