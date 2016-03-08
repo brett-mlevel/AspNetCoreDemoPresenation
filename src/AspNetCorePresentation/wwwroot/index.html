@@ -5,18 +5,21 @@
     <title>ASP.Net Core 1.0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="lib/reveal.js/css/reveal.css">
+    <link rel="stylesheet" href="lib/highlightjs/styles/default.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
 <div class="reveal mLevel">
     <div class="slides">
         <section>
-            <h1>Revealer</h1>
-            <h3>Reveal.js multiplexer</h3>
+            <h1>ASP.NET Core 1.0</h1>
+            <h3 class="fragment">formerly known as </h3>
+            <p class="fragment">ASP.NET 5</p>
+            <p class="fragment">ASP.NET vNext</p>
         </section>
         <section id="show-a-link">
-            <h1>Show a live link</h1>
-            <p>Slide 2 discussed here</p>
+            <h2>The hero we deserve</h2>
+            <p>But it's going to rattle some cages</p>
             <p>See <a href="http://www.htmlcheats.com">HTMLCheats.com</a><p>
         </section>
 
@@ -58,14 +61,39 @@
         </section>
 
         <section>
-            <h1>New Features</h1>
-            <p></p>
-            <ul>
-                <li>Tag Helpers</li>
-                <li>Task Runner</li>
-                <li>JSON based config</li>
-                <li>Build-in Dependency Injection</li>
-            </ul>
+            <section>
+                <h1>New Features</h1>
+                <p></p>
+                <ul>
+                    <li>Tag Helpers</li>
+                    <li>Task Runner</li>
+                    <li>JSON based config</li>
+                    <li>Build-in Dependency Injection</li>
+                </ul>
+            </section>
+            <section>
+                <h1>Tag Helpers</h1>
+                <pre>
+                    <code class="csharp">@Html.ActionLink("Add a Movie", "Add", "Movie")</code>
+                </pre>
+                <p>now becomes</p>
+                <pre>
+                    <code class="html">&lt;a asp-action="Add" asp-controller="Movie"&gt;Add a Movie&lt;/a&gt;</code>
+                </pre>
+                <p>Forms look like html forms again, but now with intellisense!</p>
+            </section>
+            <section>
+                <h1>Environment Tag Helper</h1>
+                <pre>
+                <code class="html">&lt;environment names="Development"&gt;
+...
+&lt;/environment&gt;
+&lt;environment names="Staging,Production"&gt;
+...
+&lt;/environment&gt;</code>
+                </pre>
+                <p>Code block rendered based on the ASPNET_ENV environment variable</p>
+            </section>
         </section>
 
         <section>
@@ -77,8 +105,10 @@
 </div>
     <div class="mLevel-badge"></div>
     <script src="lib/reveal.js/js/reveal.js"></script>
+    <script src="lib/highlightjs/highlight.pack.min.js"></script>
     <script type="text/javascript">
-            Reveal.initialize({history: true});
+        Reveal.initialize({ history: true });
+        hljs.initHighlightingOnLoad();
     </script>
 </body>
 </html>
