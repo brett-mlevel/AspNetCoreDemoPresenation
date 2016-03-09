@@ -5,7 +5,7 @@
     <title>ASP.Net Core 1.0</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <link rel="stylesheet" href="lib/reveal.js/css/reveal.css">
-    <link rel="stylesheet" href="lib/highlightjs/styles/default.css">
+    <link rel="stylesheet" href="lib/reveal.js/lib/css/zenburn.css"/>
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
@@ -17,10 +17,12 @@
             <p class="fragment">ASP.NET 5</p>
             <p class="fragment">ASP.NET vNext</p>
         </section>
-        <section id="show-a-link">
+
+        <section>
             <h2>The hero we deserve</h2>
             <p>But it's going to rattle some cages</p>
-            <p>See <a href="http://www.htmlcheats.com">HTMLCheats.com</a><p>
+            <p>See <a href="http://www.htmlcheats.com">HTMLCheats.com</a>
+            <p>
         </section>
 
         <section>
@@ -48,9 +50,11 @@
                 <a href="https://github.com/aspnet/Home/wiki/Roadmap">https://github.com/aspnet/Home/wiki/Roadmap</a>
             </p>
         </section>
-
         <section>
-            <h1>Newly Integrated</h1>
+            <h1>Frontend</h1>
+        </section>
+        <section>
+            <h2>New Integrations</h2>
             <p>ASP.NET Core projects rely on:</p>
             <ul>
                 <li>Node.js</li>
@@ -58,6 +62,9 @@
                 <li>Gulp (or Grunt)</li>
                 <li>bower</li>
             </ul>
+            <aside class="notes">
+                Visual Studio developers are already familiar with NuGet, so why not use NuGet instead of Bower? Mainly because Bower already has a rich ecosystem with over 34,000 packages in play; and, it integrates well with the Gulp and Grunt task runners.
+            </aside>
         </section>
 
         <section>
@@ -74,23 +81,32 @@
             <section>
                 <h1>Tag Helpers</h1>
                 <pre>
-                    <code class="csharp">@Html.ActionLink("Add a Movie", "Add", "Movie")</code>
+                    <code class="razor" data-trim>
+@Html.ActionLink("Add a Movie", "Add", "Movie")
+
+</code>
                 </pre>
                 <p>now becomes</p>
                 <pre>
-                    <code class="html">&lt;a asp-action="Add" asp-controller="Movie"&gt;Add a Movie&lt;/a&gt;</code>
+                    <code class="html"  data-trim>
+&lt;a asp-action="Add" asp-controller="Movie"&gt;Add a Movie&lt;/a&gt;
+
+</code>
                 </pre>
                 <p>Forms look like html forms again, but now with intellisense!</p>
             </section>
             <section>
                 <h1>Environment Tag Helper</h1>
                 <pre>
-                <code class="html">&lt;environment names="Development"&gt;
+                <code class="html"  data-trim>
+&lt;environment names="Development"&gt;
 ...
 &lt;/environment&gt;
 &lt;environment names="Staging,Production"&gt;
 ...
-&lt;/environment&gt;</code>
+&lt;/environment&gt;
+
+</code>
                 </pre>
                 <p>Code block rendered based on the ASPNET_ENV environment variable</p>
             </section>
@@ -100,15 +116,214 @@
             <h1>Let's make something!</h1>
             <p class="fragment" data-fragment-index="1">Let's make this slide deck</p>
         </section>
+        <section>
+            <section>
+                <h2>Step 1: Frame it up</h2>
+                <ul>
+                    <li>Create the project</li>
+                    <li>Pull in Packages we need</li>
+                    <li>Clear out the ones we don't</li>
+                    <li>Build/Run locally</li>
+                </ul>
+            </section>
 
+            <section>
+                <h2>Ever seen this?</h2>
+                <img src="images/changesnotallowed.png" alt="This sucks"/>
+                <p class="fragment">Welcome to the future!</p>
+                <p class="fragment">Well...mostly (you can't debug)</p>
+            </section>
+        </section>
+
+        <section>
+            <section>
+                <h2>Step 2: Build Runner</h2>
+                <p>Using Gulp, we can</p>
+                <ul>
+                    <li>Watch and Build SASS/LESS Files</li>
+                    <li>Watch and Build TypeScript Files</li>
+                    <li>Concat/Minify CSS</li>
+                    <li>Concat/Minify JS</li>
+                    <li>
+                        Do pretty much anything we want on:
+                        <ul>
+                            <li>Project Open</li>
+                            <li>Before Build</li>
+                            <li>After Build</li>
+                            <li>Clean</li>
+                        </ul>
+                    </li>
+                </ul>
+                <aside class="notes">
+                    Couldn't we already do this with MSBuild and Visual Studio? Well, for the most part yes -
+                    but using Gulp allows us to make our web projects more portable between operating systems
+                    and Editors. Additionally, it de-couples build steps from running our web app, which has a
+                    number of benefits.
+                </aside>
+            </section>
+            <section>
+                <h2>Gulpfile.js</h2>
+                <pre>
+                <code class="javascript" data-trim>/// <binding Clean='clean' />
+"use strict";
+var gulp = require("gulp"),
+    rimraf = require("rimraf"),
+    concat = require("gulp-concat"),
+    cssmin = require("gulp-cssmin"),
+    uglify = require("gulp-uglify");
+var paths = {
+    webroot: "./wwwroot/"
+};
+paths.js = paths.webroot + "js/**/*.js";
+paths.minJs = paths.webroot + "js/**/*.min.js";
+paths.css = paths.webroot + "css/**/*.css";
+paths.minCss = paths.webroot + "css/**/*.min.css";
+paths.concatJsDest = paths.webroot + "js/site.min.js";
+paths.concatCssDest = paths.webroot + "css/site.min.css";
+gulp.task("clean:js", function (cb) {
+    rimraf(paths.concatJsDest, cb);
+});
+gulp.task("clean:css", function (cb) {
+    rimraf(paths.concatCssDest, cb);
+});
+gulp.task("clean", ["clean:js", "clean:css"]);
+gulp.task("min:js", function () {
+    return gulp.src([paths.js, "!" + paths.minJs], { base: "." })
+        .pipe(concat(paths.concatJsDest))
+        .pipe(uglify())
+        .pipe(gulp.dest("."));
+});
+gulp.task("min:css", function () {
+    return gulp.src([paths.css, "!" + paths.minCss])
+        .pipe(concat(paths.concatCssDest))
+        .pipe(cssmin())
+        .pipe(gulp.dest("."));
+});
+gulp.task("min", ["min:js", "min:css"]);
+</code>
+                </pre>
+            </section>
+        </section>
+        <section>
+            <h1>Backend</h1>
+        </section>
+        <section>
+            <section>
+                <h2>New Features</h2>
+                <ul>
+                    <li>New Config Mgmt</li>
+                    <li>Built-in DI</li>
+                    <li>Faster Response Times</li>
+                    <li>Drastically Faster</li>
+                    <li>Open Source (yay!)</li>
+                </ul>
+            </section>
+            <section>
+                <h2>Config</h2>
+                <p>web.config and transforms replaced by appsettings.json</p>
+                <pre><code class="json">{
+  "Data": {
+    "DefaultConnection": {
+      "ConnectionString": "Server=(localdb)\\mssqllocaldb;Database=aspnet5-db;Trusted_Connection=True;"
+    }
+  },
+  "ApplicationInsights": {
+    "InstrumentationKey": "edde8e81-f25e-4790-9ca4-820b148b9f3d"
+  },
+  "Logging": {
+    "IncludeScopes": false,
+    "LogLevel": {
+      "Default": "Verbose",
+      "System": "Information",
+      "Microsoft": "Information"
+    }
+  }
+}</code></pre>
+            </section>
+            <section>
+                <h2>Config Management</h2>
+                <p>Startup.cs defines how config is processed</p>
+                <pre><code class="csharp" data-trim>
+public Startup(IHostingEnvironment env)
+{
+    // Set up configuration sources.
+    var builder = new ConfigurationBuilder()
+        .AddJsonFile("appsettings.json")
+        .AddEnvironmentVariables(); //Environment Variables override settings in appsettings.json
+
+    if (env.IsDevelopment())
+    {
+        // This will push telemetry data through Application Insights pipeline faster, allowing you to view results immediately.
+        builder.AddApplicationInsightsSettings(developerMode: true);
+    }
+    Configuration = builder.Build();
+}
+</code></pre>
+                <p>Environment variable overrides make Cloud Config much easier</p>
+            </section>
+            <section>
+                <h2>Dependency Injection</h2>
+                <p>New built-in abstraction and default provider</p>
+                <dl>
+                    <dt>Transient</dt>
+                    <dd class="fragment">Created each time they are requested.</dd>
+
+                    <dt>Scoped</dt>
+                    <dd class="fragment">Created once per request. Good for a DbContext.</dd>
+
+                    <dt>Singleton</dt>
+                    <dd class="fragment">Created the first time they are requested, every subsequent request uses the same instance. </dd>
+
+                    <dt>Instance</dt>
+                    <dd class="fragment">Add an instance directly to the services container. This instance will be used for all subsequent requests (this will create a Singleton-scoped instance).</dd>
+                </dl>
+                <aside class="notes">One key difference between Instance services and Singleton services is that the Instance service is created in ConfigureServices, while the Singleton service is lazy-loaded the first time it is requested.</aside>
+            </section>
+            <section>
+                <h2>Dependency Injection</h2>
+                <p>Configured from Startup.cs ConfigureServices() method</p>
+                <pre><code class="csharp" data-trim>
+public void ConfigureServices(IServiceCollection services)
+{
+    services.AddScoped&lt;IUserService, UserService&gt;();
+    //services.AddTransient&lt;IUserService, UserService&gt;();
+    //services.AddSingleton&lt;IUserService, UserService&gt;();
+    //services.AddInstance(new UserService());
+}
+</code></pre>
+                <p>Can then be used elsewhere in the app</p>
+                <pre><code class="csharp" data-trim>
+private readonly IUserService _userService;
+public HomeController(IUserService userService)
+{
+    _userService = userService;
+}
+</code></pre>
+                <p>You can swap out the DI provider for Unity, Autofac, etc and keep the same syntax.</p>
+            </section>
+        </section>
     </div>
 </div>
-    <div class="mLevel-badge"></div>
+    <script src="lib/headjs/dist/1.0.0/head.js"></script>
     <script src="lib/reveal.js/js/reveal.js"></script>
-    <script src="lib/highlightjs/highlight.pack.min.js"></script>
     <script type="text/javascript">
-        Reveal.initialize({ history: true });
-        hljs.initHighlightingOnLoad();
+        Reveal.initialize({
+            history: true,
+            dependencies: [
+                // Syntax highlight for <code> elements
+                {
+                    src: 'lib/reveal.js/plugin/highlight/highlight.js',
+                    async: true,
+                    callback: function () {
+                        hljs.registerLanguage("razor", function (b) {
+                            var a = "foreach|0 var|0 if|0 in|0 else|0 model|0 using|0 false|0true|0 null|0 int|0 for|0 double|0 decimal|0 float|0 string|0 new|0";
+                            return { k: a, c: [{ cN: "built_in", b: "Html|Scripts|RenderBody|RenderSection|Styles" }, { cN: "comment", b: "@[*]", e: "[*]@" }, { cN: "start", b: /[@][?\\w]*/, i: /[@][{*]/ }, { cN: "string", b: '"((?!@))', e: '"', i: "\\n" }, { b: "<", e: ">", i: "</?", sL: "xml", c: [{ b: '"@', e: '"', sL: "razor" }] }] }
+                        });
+                        hljs.initHighlightingOnLoad();
+                    }
+                }
+            ]
+        });
     </script>
 </body>
 </html>

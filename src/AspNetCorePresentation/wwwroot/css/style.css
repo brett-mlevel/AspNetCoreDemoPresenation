@@ -1,7 +1,7 @@
 /**
  * mLevel theme for reveal.js.
  */
-@import url(../../lib/font/source-sans-pro/source-sans-pro.css);
+@import url(../../lib/reveal.js/lib/font/source-sans-pro/source-sans-pro.css);
 section.has-light-background, section.has-light-background h1, section.has-light-background h2, section.has-light-background h3, section.has-light-background h4, section.has-light-background h5, section.has-light-background h6 {
   color: #222; }
 
@@ -283,14 +283,18 @@ body {
   -moz-transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985);
   transition: width 800ms cubic-bezier(0.26, 0.86, 0.44, 0.985); }
 
-.mLevel-badge {
-  position: absolute;
-  left: 0;
-  bottom: 0;
-  width: 10%;
-  height: 300px;
-  background-size: cover;
-  background-image: url("/images/mLevel-badge.svg");
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  background-position: center; }
+.reveal pre {
+  box-shadow: none; }
+
+.reveal dl {
+  margin-top: .5em; }
+
+.reveal dt {
+  color: #42affa; }
+
+.reveal dd {
+  font-size: 0.8em; }
+
+.razor .hljs-start {
+  background-color: #d2d295;
+  color: black; }

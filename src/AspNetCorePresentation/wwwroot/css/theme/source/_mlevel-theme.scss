@@ -10,7 +10,7 @@
 
 
 // Include theme-specific fonts
-@import url(../../lib/font/source-sans-pro/source-sans-pro.css);
+@import url(../../lib/reveal.js/lib/font/source-sans-pro/source-sans-pro.css);
 
 
 // Override theme settings (see ../template/settings.scss)
@@ -34,6 +34,7 @@ $heading1Size: 2.5em;
 $heading2Size: 1.6em;
 $heading3Size: 1.3em;
 $heading4Size: 1.0em;
+$definitionSize: .8em;
 
 section.has-light-background {
 	&, h1, h2, h3, h4, h5, h6 {
@@ -42,6 +43,23 @@ section.has-light-background {
 }
 
 
+
+
 // Theme template ------------------------------
 @import "../template/theme.scss";
 // ---------------------------------------------
+
+.reveal {
+    pre {
+        box-shadow: none;
+    }
+    dl {
+        margin-top: .5em;
+    }
+    dt {
+        color: $linkColor
+    }
+    dd {
+        font-size: $definitionSize;
+    }
+}

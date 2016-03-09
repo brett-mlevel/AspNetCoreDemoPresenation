@@ -7,6 +7,7 @@ using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
 using Microsoft.AspNet.StaticFiles;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Primitives;
 
 namespace AspNetCorePresentation
 {
@@ -16,13 +17,17 @@ namespace AspNetCorePresentation
         // For more information on how to configure your application, visit http://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IUserService, UserService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddSingleton<IUserService, UserService>();
+            // or, register an instance (also singleton)
+            services.AddInstance(new UserService());
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app)
         {
             app.UseIISPlatformHandler();
-
             // Add static files to the request pipeline.
             app.UseDefaultFiles();
             app.UseStaticFiles();
@@ -30,5 +35,18 @@ namespace AspNetCorePresentation
 
         // Entry point for the application.
         public static void Main(string[] args) => WebApplication.Run<Startup>(args);
+    }
+
+    interface IUserService
+    {
+        void AddUser();
+    }
+
+    class UserService : IUserService
+    {
+        public void AddUser()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

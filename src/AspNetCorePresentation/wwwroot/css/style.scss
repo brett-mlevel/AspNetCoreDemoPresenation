@@ -1,15 +1,9 @@
 ﻿// Default mixins and settings -----------------
 @import "theme/source/mlevel-theme.scss";
 
-.mLevel-badge {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    width: 10%;
-    height: 300px;
-    background-size: cover;
-    background-image: url('/images/mLevel-badge.svg');
-    background-repeat: no-repeat;
-    background-attachment: fixed;
-    background-position: center; 
+.razor {
+    .hljs-start {
+        background-color: rgb(210,210,149);
+        color: black;
+    }
 }
